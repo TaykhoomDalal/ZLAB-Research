@@ -1,0 +1,2 @@
+#download example data archive
+wget http://zzz.bwh.harvard.edu/plink/hapmap1.zip

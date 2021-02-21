@@ -1,0 +1,6 @@
+ CHR         SNP   A1   A2     TEST            AFF          UNAFF        CHISQ   DF            P
+   2   rs2222162    1    2     GENO        3/19/22        17/22/6           NA   NA           NA
+   2   rs2222162    1    2    TREND          25/63          56/34        19.15    1    1.207e-05
+   2   rs2222162    1    2  ALLELIC          25/63          56/34        20.51    1    5.918e-06
+   2   rs2222162    1    2      DOM          22/22           39/6           NA   NA           NA
+   2   rs2222162    1    2      REC           3/41          17/28           NA   NA           NA
