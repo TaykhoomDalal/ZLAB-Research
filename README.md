@@ -1,2 +1,1 @@
-# ZLAB-Research
-Repository for research work at Zaitlen Lab @ UCLA
+# Collaborators: Taykhoom Dalal, Giorgia Nicolaou, Defne Ercelen
