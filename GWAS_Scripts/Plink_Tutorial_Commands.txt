@@ -1,0 +1,166 @@
+#commands to run tutorials
+
+#download example data archive
+wget http://zzz.bwh.harvard.edu/plink/hapmap1.zip
+
+#create interactive session
+qrsh -l h_rt=1:00:00,h_data=24G
+
+# you get reset back to home directory after running qrsh
+cd [insert_path_back_to_folder_here]
+
+#load plink
+module load plink
+
+#get basic summary stats about the file
+plink --file hapmap1 --write-snplist
+
+
+### MAKING BINARY PED FILE ###
+
+#make binary PED file - speeds up analysis since more compact
+plink --file hapmap1 --make-bed --out hapmap1
+
+#if you want new file with 95% complete genotyping
+plink --file hapmap1 --make-bed --mind 0.05 --out highgeno
+
+
+
+### WORKING WITH BINARY PED FILE ###
+
+#since we just converted files to binary, need to specify input data is in binary
+plink --bfile hapmap1
+
+### SIDE NOTE ###
+#if you want info about files add the following option
+--write-snplist
+#################
+
+
+
+### SUMMARY STATISTICS: MISSINGNESS ###
+
+#generate summary statistics on rates of missing data
+plink --bfile hapmap1 --missing --out miss_stat
+
+#--out option allows us to specify root file name, i.e. miss_stat.log, miss_stat.lmiss, etc
+
+### SIDE NOTE ###
+to analyze data by chromosome, use --chr option
+
+I.E for chromosome 1:
+plink --bfile hapmap1 --chr 1 --out res1 --missing
+
+Chromosome 2:
+plink --bfile hapmap1 --chr 2 --out res2 --missing
+################
+
+
+### SUMMARY STATISTICS: ALLELE FREQUENCIES ###
+
+#to get minor allele frequency and allele codes for each SNP
+plink --bfile hapmap1 --freq --out freq_stat
+
+      the file generated here is freq_stat.frq
+
+#to do this analysis stratified by categorical (cluster) variable - in our case by population (useful) - use the --within option
+plink --bfile hapmap1 --freq --within pop.phe --out freq_stat
+
+      file generated here is freq_stat.frq.strat
+
+#check out the previous made file
+more freq_stat.frq.strat
+
+#if you want a specific SNP and see its frequency in the clusters, using --snp option and its name
+plink --bfile hapmap1 --snp rs1891905 --freq --within pop.phe --out snp1_frq_stat
+
+      file genereated here is snp1_frq_stat.frq.strat
+
+#extracting subset of snps - read here
+http://zzz.bwh.harvard.edu/plink/dataman.shtml#extract
+
+
+
+
+### BASIC ASSOCIATION ANALYSIS ###
+
+#create file with association data - GWAS!!
+plink --bfile hapmap1 --assoc --out as1
+
+#checkout the file
+more as1.assoc
+
+### SIDE NOTE ###
+the field OR in the file assoc is the odds ratio AKA effect size
+#################
+
+# to sort by significance - in this case by the chisquared test
+sort --key=8 -nr as1.assoc | head
+
+#to get sorted list of association results use --adjust flag
+plink --bfile hapmap1 --assoc --adjust --out as2
+
+      file generated is as2.assoc.adjust
+
+#taking a look at this file
+more as2.assoc.adjusted
+
+#testing for frequency differences between clusters
+plink --bfile hapmap1 --pheno pop.phe --assoc --adjust --out as3
+
+
+
+### GENOTYPIC AND OTHER ASSOCIATION MODELS ###
+
+#calculate tests that assume dominant or recessive action of the minor allele and
+# perform the Cochran-Armitage trend test instead of the basic allelic test
+plink --bfile hapmap1 --model --snp rs2222162 --out mod1
+
+      file generated mod1.model
+
+#to force the genotypic tests for this particular SNP
+plink --bfile hapmap1 --model --cell 0 --snp rs2222162 --out mod2
+
+
+
+### STRATIFICATION ANALYSIS ###
+
+#if we know diseases is more prevalent in specific sub pop
+# run cluster analysis that pairs up individuals on the basis of genetic identity
+plink --bfile hapmap1 --cluster --mc 2 --ppc 0.05 --out str1
+
+      file generated str1.cluster1
+
+#checking out the file
+more str1.cluster1
+
+
+
+###  ASSOCIATION ANALYSIS ACCOUNTING FOR CLUSTERS ###
+
+#association test conditional on clustering
+plink --bfile hapmap1 --mh --within str1.cluster2 --adjust --out aac1
+
+      file generated aac1.cmh.adjusted
+
+#checkout this file
+more aac1.cmh.adjusted
+
+#don't impose max cluster size, request each cluster contains at least 1 cae and control with --cc option, specify threshold of 0.01 for --ppc
+plink --bfile hapmap1 --cluster --cc --ppc 0.01 --out version2
+
+      file generated version2.cluster1
+
+#based on alternate clustering, repeat assoc
+plink --bfile hapmap1 --mh --within version2.cluster2 --adjust --out aac2
+
+#specify number of clusters (2 in this case) one wants in final solution using --K option
+plink --bfile hapmap1 --cluster --K 2 --out version3
+
+#based on this clustering, run assoc again
+plink --bfile hapmap1 --mh --within version3.cluster2 --adjust --out aac3
+
+#run external clustering based on actual ancestry
+plink --bfile hapmap1 --mh --within pop.phe --adjust --out aac4
+
+
