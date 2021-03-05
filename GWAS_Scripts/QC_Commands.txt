@@ -1,0 +1,43 @@
+#!/bin/bash
+
+module load plink
+
+Options in effect:
+  --bfile /u/home/s/sriram/ukbiobank/data/geno/imp/hard_calls/all
+  --exclude /u/home/s/sriram/ukbiobank/data/geno/imp/hard_calls/mhc_of_all.txt
+  --geno 0.01
+  --hwe 1e-7
+  --keep /u/home/s/sriram/ukbiobank/data/geno/cal/filter4.fam  //(unrelated white British individuals)
+  --maf 0.01
+  --make-bed
+  --out /u/home/s/sriram/ukbiobank/data/geno/imp/Qced/qced
+
+
+
+plink -bfile ~/project-ukbiobank/data/geno/imp/hard_calls/all --hwe 1e-10 --keep /u/home/s/sriram/ukbiobank/data/geno/cal/filter4.fam --maf 0.001 --make-bed --out  
+
+#
+--maf 0.001 #filters MAF > 0.001
+
+#
+--hwe 1e-10
+
+#
+--proxy-info-threshold 0.8 #maybe used for INFO threshold
+
+
+#use to grab beta column possibly
+cat maleHeightData.tsv | cut -f8  > maleHeightBetaData.txt
+
+#remove first line (beta header)
+echo "$(tail -n +2 maleHeightBetaData.txt)" > maleHeightBetaData.txt
+
+
+#  --bfile /u/project/sriram/ukbiobank/data/geno/imp/hard_calls/all
+#  --exclude /u/project/sriram/ukbiobank/data/geno/imp/hard_calls/mhc_of_all.txt
+#  --geno 0.01
+#  --hwe 1e-7
+#  --keep /u/project/sriram/ukbiobank/data/geno/cal/filter4.fam
+#  --maf 0.001
+#  --make-bed
+#  --out /u/home/s/sriram/ukbiobank/data/geno/imp/Qced/maf_0.001/all
