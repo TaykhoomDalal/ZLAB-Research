@@ -1,11 +1,11 @@
-#### Assoc_QSUB_Script.sh START ####
+#### combine_SampleData.sh START ####
 #!/bin/bash
 #$ -cwd
 # error = Merged with joblog
-#$ -o assoc_samples_error_log.$JOB_ID
+#$ -o qc_UKBB_Sample_error_log.$JOB_ID
 #$ -j y
 ## Edit the line below as needed:
-#$ -l h_rt=24:00:00,h_data=24G
+#$ -l h_rt=24:00:00,h_data=64G
 ## Modify the parallel environment
 ## and the number of cores as needed:
 #$ -pe shared 1
@@ -27,10 +27,10 @@ module load plink
 ## substitute the command to run your code
 ## in the two lines below:
 echo '/usr/bin/time -v hostname'
-./SampleFULL_GWAS.sh
+
 
 # echo job info on joblog:
 echo "Job $JOB_ID ended on:   " `hostname -s`
 echo "Job $JOB_ID ended on:   " `date `
 echo " "
-#### Assoc_QSUB_Script.sh STOP ####
+#### combine_SampleData.sh STOP ####
