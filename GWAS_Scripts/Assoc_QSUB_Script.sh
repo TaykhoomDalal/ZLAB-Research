@@ -8,12 +8,12 @@
 #$ -l h_rt=12:00:00,h_data=8G
 ## Modify the parallel environment
 ## and the number of cores as needed:
-#$ -pe shared 11
+#$ -pe shared 12
 # Email address to notify
 #$ -M $USER@mail
 # Notify when
 #$ -m bea
-#$ -t 11:1
+#$ -t 1-22:1
 
 # echo job info on joblog:
 echo "Job $JOB_ID started on:   " `hostname -s`
@@ -31,8 +31,8 @@ echo '/usr/bin/time -v hostname'
 
 ./plink2 --bgen ~/project-ukbiobank/data/geno/imp/bgen/ukb_imp_chr"$SGE_TASK_ID"_v3.bgen \
 --sample ~/project-ukbiobank/data/geno/imp/bgen/impv3.sample \
---threads 11 \
---memory 88000 \
+--threads 12 \
+--memory 96000 \
 --extract ~/project-zaitlenlab/dataFolder/info_maf_qc_ukb_mfi_chr"$SGE_TASK_ID"_v3.txt \
 --geno 0.05 \
 --hwe 1e-10 \
