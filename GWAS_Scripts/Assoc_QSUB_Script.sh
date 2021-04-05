@@ -38,9 +38,8 @@ echo '/usr/bin/time -v hostname'
 --hwe 1e-10 \
 --maf 0.001 \
 --glm \
---pheno ~/project-ukbiobank/33127/ukb21970_plink/filter4_pheno_files/height.pheno \
---covar ~/project-ukbiobank/33127/ukb21970_plink/filter4_pheno_files/height.covar \
---covar-name sex,f.22009.0.1,f.22009.0.2,f.22009.0.3,f.22009.0.4,f.22009.0.5,f.22009.0.6,f.22009.0.7,f.22009.0.8,f.22009.0.9,f.22009.0.10 \
+--pheno /u/scratch/t/taykhoom/height.pheno \
+--covar /u/scratch/t/taykhoom/height.covar \
 --parameters 1 \
 --out /u/scratch/t/taykhoom/assoc_chr"$SGE_TASK_ID"_v3
 
