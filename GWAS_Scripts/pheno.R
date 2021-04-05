@@ -1,6 +1,6 @@
 # Extract relevant columns from ukbb phenotype file; put into PLINK format 
 #   for performing association.
-# Author: Taykhoom Dalal
+# Author: Kathy Burch
 # =============================================================================
 library(data.table)
 library(dplyr, quietly = TRUE)
@@ -12,7 +12,8 @@ main <- function() {
   # Read command-line arguments
   trait <- "height"
   pheno_id <- "f.50.0.0"
-  pc_id <- paste0("f.22009.0.", c(1:10))
+  pc_id <- paste0("f.22009.0.", c(1:20))
+  ethnic_id <- "f.22006.0.0"
   covar_id <- NA
   #trait <- args[[1]]
   #pheno_id <- args[[2]]
@@ -22,10 +23,9 @@ main <- function() {
   indiv_id <- "f.eid"
   age_id <- "f.21003.0.0"
   sex_id <- "f.31.0.0"
-  ethnic_id <- "f.22006.0.0"
 
   # Make output directory
-  out_dir <- paste0("/u/scratch/t/taykhoom/pheno/")
+  out_dir <- paste0("/u/scratch/t/taykhoom/")
   dir.create(file.path(out_dir, trait), showWarnings = FALSE)
   out_dir %<>% paste0(., trait, "/")
 
@@ -60,6 +60,9 @@ main <- function() {
     IID = pheno_file$f.eid, 
     sex = unlist(pheno_file[, get(sex_id)]),
     age = unlist(pheno_file[, get(age_id)]),
+    age_squared = unlist(pheno_file[, get(age_id)])*unlist(pheno_file[, get(age_id)]),
+    sex_age = unlist(pheno_file[, get(age_id)])*unlist(pheno_file[, get(sex_id)]),
+    sex_age_squared = unlist(pheno_file[, get(age_id)])*unlist(pheno_file[, get(age_id)])*unlist(pheno_file[, get(sex_id)]),
     ethnicity = unlist(pheno_file[, get(ethnic_id)])
   )
   if (sum(is.na(pc_id)) == 0) {
