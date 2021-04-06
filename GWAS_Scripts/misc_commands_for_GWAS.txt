@@ -1,0 +1,23 @@
+### FOR THE RESULTS ###
+
+1.
+	#regex for removing extra column string in nealelab results file
+	perl -anE'$" = "\t"; $F[0] =~ s/:{1}[ACTG]+:{1}[ACTG]+//; say "@F"' [insert_name_of_neale_lab_results] > [name_whatever].txt
+
+2.
+	#remove header from file 
+	sed '1d' [insert_name_of_neale_lab_results].tsv > tmpfile; mv tmpfile [insert_name_of_neale_lab_results].tsv
+
+3.
+	#regex for removing extra part of string in first column in nealelab results file
+        perl -anE'$" = "\t"; $F[0] =~ s/^[0-9]{1,2}:{1}//; say "@F"' [file name here] > results.txt	
+
+4.
+	#matches up snps between the two results files
+	join -1 1 -2 1 [insert_name_of_neale_lab_results].tsv [insert name of our results file].tsv > [name_whatever].txt
+
+
+### FOR THE COVARIATE FILES ###
+
+#command for removing individuals in pheno file that are not in covar file
+awk 'NR==FNR{_[$2];next}($2 in _)' height.covar height.pheno
