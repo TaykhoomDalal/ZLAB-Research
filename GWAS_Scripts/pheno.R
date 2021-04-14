@@ -1,6 +1,6 @@
 # Extract relevant columns from ukbb phenotype file; put into PLINK format 
 #   for performing association.
-# Author: Kathy Burch
+# Author: Taykhoom Dalal
 # =============================================================================
 library(data.table)
 library(dplyr, quietly = TRUE)
@@ -43,6 +43,8 @@ main <- function() {
 
   # Convert female sex from 0 to 2 for plink
   pheno_file[get(sex_id) == 0, (sex_id) := 2]
+  
+  pheno_file[get(ethnic_id)==1]
 
   # Create main phenotype file for plink
   pheno_out <- data.table(
